@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Поддержка</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #667eea;
+            text-align: center;
+            padding-top: 100px;
+        }
+        button {
+            background: #ff6b6b;
+            color: white;
+            font-size: 24px;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+        .modal {
+            display: none;
+            background: rgba(0,0,0,0.5);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .modal-content {
+            background: white;
+            width: 400px;
+            margin: 100px auto;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: left;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 15px 0;
+        }
+        .submit {
+            background: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+        }
+        .close {
+            float: right;
+            cursor: pointer;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="color:white;">Техническая поддержка</h1>
+    <button id="btn">📨 Написать в поддержку</button>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Обращение</h2>
+            <form id="form">
+                <label>Имя:</label><br>
+                <input type="text" id="name" required><br>
+                <label>Email:</label><br>
+                <input type="email" id="email" required><br>
+                <label>Сообщение:</label><br>
+                <textarea id="msg" rows="4" required></textarea><br>
+                <button type="submit" class="submit">Отправить</button>
+            </form>
+            <div id="result"></div>
+        </div>
+    </div>
+
+    <script>
+        let modal = document.getElementById('modal');
+        let btn = document.getElementById('btn');
+        let close = document.querySelector('.close');
+        let form = document.getElementById('form');
+        let result = document.getElementById('result');
+
+        btn.onclick = function() {
+            modal.style.display = 'block';
+        }
+
+        close.onclick = function() {
+            modal.style.display = 'none';
+            form.reset();
+            result.innerHTML = '';
+        }
+
+        window.onclick = function(e) {
+            if(e.target == modal) {
+                modal.style.display = 'none';
+                form.reset();
+                result.innerHTML = '';
+            }
+        }
+
+        form.onsubmit = async function(e) {
+            e.preventDefault();
+            
+            let data = new FormData();
+            data.append('name', document.getElementById('name').value);
+            data.append('email', document.getElementById('email').value);
+            data.append('message', document.getElementById('msg').value);
+
+            let response = await fetch('save.php', {
+                method: 'POST',
+                body: data
+            });
+            
+            let text = await response.text();
+            result.innerHTML = '<div style="background:#d4edda;padding:10px;margin-top:10px;">✅ ' + text + '</div>';
+            form.reset();
+            
+            setTimeout(() => {
+                result.innerHTML = '';
+                modal.style.display = 'none';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
