@@ -1,5 +1,4 @@
 <?php
-// ========== ВАШИ ДАННЫЕ ОТ INFINITYFREE (ЗАМЕНИТЕ НА СВОИ!) ==========
 $host = "sql110.infinityfree.com";              // Ваш хост БД
 $dbname = "if0_42015829_epiz_12345678_support_db";      // Полное имя БД
 $username = "if0_42015829";          // Имя пользователя БД
@@ -12,10 +11,8 @@ if ($conn->connect_error) {
     die("Ошибка подключения: " . $conn->connect_error);
 }
 
-// Устанавливаем кодировку
 $conn->set_charset("utf8mb4");
 
-// Получаем все сообщения (от новых к старым)
 $result = $conn->query("SELECT * FROM messages ORDER BY id DESC");
 ?>
 
